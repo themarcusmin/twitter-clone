@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { useAuth } from '../utils/AuthContext'
+
 import twitterLogo from '../styles/twitterLogo.png'
 
 const Signup = () => {
@@ -13,7 +13,6 @@ const Signup = () => {
     const history = useHistory()
     const [error, setError] = useState("")
 
-    // const { signup } = useAuth()
 
     const handleRegister = async (e) => {
         e.preventDefault();

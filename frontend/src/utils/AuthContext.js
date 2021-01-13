@@ -18,8 +18,10 @@ export const AuthProvider = ({ children }) => {
     }
 
     const value = {
+        user,
         signup
     }
+
     return (
         <AuthContext.Provider value={value}>
             {children}

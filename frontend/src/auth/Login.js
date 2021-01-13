@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { useAuth } from '../utils/AuthContext'
 import twitterLogo from '../styles/twitterLogo.png'
 
 const Login = () => {
@@ -8,6 +9,7 @@ const Login = () => {
 
     const history = useHistory()
     const [error, setError] = useState("")
+    const { signup } = useAuth()
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -15,10 +17,13 @@ const Login = () => {
         setError("")
 
         try {
-            const response = await fetch('http://www.localhost:4000/login', {
+            const response = await fetch('http://localhost:4000/login', {
                 method: 'POST',
                 body: JSON.stringify({ email: emailRef.current.value, password: passwordRef.current.value }),
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             })
             const data = await response.json()
             // errors: response from server
@@ -26,6 +31,7 @@ const Login = () => {
                 setError(data.errors.email || data.errors.password)
             }// success: redirect to homepage
             if (data.user) {
+                signup(data.user)
                 history.push("/home")
             }
         } catch (err) {

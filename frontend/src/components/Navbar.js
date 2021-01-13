@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import twitterLogo from '../styles/twitterLogo.png'
 import userLogo from '../styles/user.svg'
 import ellipsis from '../styles/ellipsis.svg'
@@ -15,15 +15,21 @@ const Navbar = () => {
     const activeText = (currentNav) => {
         return activeNav === currentNav ? "active-text" : "inactive-text"
     }
+    const history = useHistory()
+
+    const handleLogout = (e) => {
+        e.preventDefault()
+        history.push('/')
+    }
     return (
         <div className="relative overflow-y-hidden hidden md:block md:w-1/4">
             <div className="flex flex-col py-3 px-5 md:px-2 space-y-3 w-full justify-start">
-                <Link to="/">
+                <Link to="/home">
                     <div className="hover:bg-gray-800 rounded-full flex items-center justify-center w-12 h-12 ml-2">
                         <img className="w-7" src={twitterLogo} alt="Twitter Logo" />
                     </div>
                 </Link>
-                <Link to="/">
+                <Link to="/home">
                     <div onClick={() => setActiveNav("home")} className="group flex flex-row space-x-3 hover:bg-gray-800 w-min rounded-full py-2 px-4">
                         <svg className={activeSvg("home")} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -68,7 +74,7 @@ const Navbar = () => {
                 {logoutBtn && (
                     <div className="absolute bottom-20 left-10 w-auto border rounded-md shadow-white ring-1 ring-black ring-opacity-5">
                         <form>
-                            <button type="submit" className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-800 focus:outline-none">
+                            <button onClick={handleLogout} type="button" className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-800 focus:outline-none">
                                 Log out @username
                             </button>
                         </form>

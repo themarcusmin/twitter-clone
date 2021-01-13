@@ -2,25 +2,21 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { AuthProvider } from '../utils/AuthContext'
 
-import Navbar from './Navbar'
-import MakeTweet from './MakeTweet'
-import Explore from './Explore'
-import Notification from "./Notification"
-import Profile from "./Profile"
-import RightPanel from './RightPanel'
-
 import Landing from '../auth/Landing'
 import Login from '../auth/Login'
 import Signup from '../auth/Signup'
 import BeginPasswordReset from '../auth/BeginPasswordReset'
 import SendPasswordReset from '../auth/SendPasswordReset'
 
-import Home from './Home'
+import AuthenticatedRoute from './AuthenticatedRoute'
+import MakeTweet from './MakeTweet'
+import Explore from './Explore'
+import Notification from "./Notification"
+import Profile from "./Profile"
 
 const App = () => {
   return (
     <div className="min-h-screen min-w-screen bg-twitterBlue text-white">
-      {/* <div className="h-screen flex flex-row"> */}
       <AuthProvider>
         <Router>
           <Switch>
@@ -39,31 +35,14 @@ const App = () => {
             <Route path="/send_password_reset">
               <SendPasswordReset />
             </Route>
-            <Route path="/home">
-              <Home />
-            </Route>
+            <AuthenticatedRoute path="/home" component={MakeTweet} />
+            <AuthenticatedRoute path="/explore" component={Explore} />
+            <AuthenticatedRoute path="/notifications" component={Notification} />
+            <AuthenticatedRoute path="/profile" component={Profile} />
+            {/* dynamic profile route */}
           </Switch>
-
-          {/* <Switch>
-            <Navbar />
-            <Route exact path="/home">
-              <MakeTweet />
-            </Route>
-            <Route path="/explore">
-              <Explore />
-            </Route>
-            <Route path="/notifications">
-              <Notification />
-            </Route>
-            <Route path="/profile">
-              <Profile />
-            </Route>
-            <RightPanel />
-          </Switch> */}
-
         </Router>
       </AuthProvider>
-      {/* </div> */}
     </div>
   );
 }
