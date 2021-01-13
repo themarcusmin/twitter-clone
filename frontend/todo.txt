@@ -1,0 +1,18 @@
+api:
+
+read api
+write api
+search api + indexing
+
+route:
+
+home
+profile
+login
+logout
+
+possible features:
+
+like
+comment
+retweet

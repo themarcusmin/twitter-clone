@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .active-svg {
+        @apply text-blue-500 text-white w-7
+    }
+    .active-text {
+        @apply text-blue-500 font-semibold text-lg
+    }
+    .inactive-svg {
+        @apply group-hover:text-blue-500 text-white w-7 h-7
+    }
+    .inactive-text {
+        @apply group-hover:text-blue-500 font-semibold text-lg
+    }
+}
