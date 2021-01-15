@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 // import ImageUpload from './ImageUpload'
 
 const Profile = () => {
@@ -36,6 +36,5 @@ const Profile = () => {
         </div>
     )
 }
-{/* <input onChange={(e) => setImageFile(e.target.files[0])} type="file" accept=".png, .jpeg, .jpg" />
-    <img src={imageFile} alt="Uploaded" /> */}
+
 export default Profile

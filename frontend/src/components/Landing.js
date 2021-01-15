@@ -1,9 +1,16 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import { useUserContext } from '../utils/UserContext'
 import twitterPanel from '../styles/twitterPanel.jpg'
 import twitterLogo from '../styles/twitterLogo.png'
 
 const Landing = () => {
+    const { user } = useUserContext()
+
+    if (user) {
+        return <Redirect to='/home' />
+    }
+
     return (
         <div className="flex md:flex-row flex-col w-full">
             <div className="md:w-1/2 w-full flex flex-col border-b border-twitterBtn">

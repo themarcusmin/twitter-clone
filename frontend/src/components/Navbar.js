@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import Logout from '../auth/Logout'
+
 import twitterLogo from '../styles/twitterLogo.png'
 import userLogo from '../styles/user.svg'
 import ellipsis from '../styles/ellipsis.svg'
@@ -15,11 +17,29 @@ const Navbar = () => {
     const activeText = (currentNav) => {
         return activeNav === currentNav ? "active-text" : "inactive-text"
     }
-    const history = useHistory()
+    // const history = useHistory()
+    // const { setUser } = useAuth()
 
-    const handleLogout = (e) => {
+    // const handleLogout = async (e) => {
+    //     e.preventDefault()
+    //     fetch('/api/auth/logout', { method: 'GET' })
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             history.push('/')
+    //             setUser(null)
+    //         })
+    //         .catch(err => console.log(err))
+    // }
+
+    const handleTest = async (e) => {
         e.preventDefault()
-        history.push('/')
+        try {
+            const response = await fetch('/read-cookies')
+            const data = await response.json()
+            console.log(data)
+        } catch (err) {
+            console.log(err)
+        }
     }
     return (
         <div className="relative overflow-y-hidden hidden md:block md:w-1/4">
@@ -61,6 +81,8 @@ const Navbar = () => {
                         <div className={activeText("profile")}>Profile</div>
                     </div>
                 </Link>
+                {/* Test */}
+                <button onClick={handleTest}>Read Cookie TEST</button>
                 {/* Clickable Username */}
                 <div onClick={() => setLogoutBtn(!logoutBtn)} className="absolute bottom-3 cursor-pointer group flex flex-row items-center hover:bg-gray-800 w-auto rounded-full py-2 px-4">
                     <img className="w-8 h-8" src={userLogo} alt="Profile Icon" />
@@ -72,13 +94,7 @@ const Navbar = () => {
                 </div>
                 {/* Logout Button Visible after click */}
                 {logoutBtn && (
-                    <div className="absolute bottom-20 left-10 w-auto border rounded-md shadow-white ring-1 ring-black ring-opacity-5">
-                        <form>
-                            <button onClick={handleLogout} type="button" className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-800 focus:outline-none">
-                                Log out @username
-                            </button>
-                        </form>
-                    </div>
+                    <Logout />
                 )}
             </div>
         </div>

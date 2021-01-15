@@ -1,23 +1,25 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { AuthProvider } from '../utils/AuthContext'
 
-import Landing from '../auth/Landing'
-import Login from '../auth/Login'
-import Signup from '../auth/Signup'
-import BeginPasswordReset from '../auth/BeginPasswordReset'
-import SendPasswordReset from '../auth/SendPasswordReset'
+import { UserProvider } from './utils/UserContext'
 
-import AuthenticatedRoute from './AuthenticatedRoute'
-import MakeTweet from './MakeTweet'
-import Explore from './Explore'
-import Notification from "./Notification"
-import Profile from "./Profile"
+// import PublicRoute from './PublicRoute'
+import Landing from './components/Landing'
+import Login from './auth/Login'
+import Signup from './auth/Signup'
+import BeginPasswordReset from './auth/BeginPasswordReset'
+import SendPasswordReset from './auth/SendPasswordReset'
+
+import AuthenticatedRoute from './components/AuthenticatedRoute'
+import MakeTweet from './components/MakeTweet'
+import Explore from './components/Explore'
+import Notification from "./components/Notification"
+import Profile from "./components/Profile"
 
 const App = () => {
   return (
     <div className="min-h-screen min-w-screen bg-twitterBlue text-white">
-      <AuthProvider>
+      <UserProvider>
         <Router>
           <Switch>
             <Route exact path="/">
@@ -42,7 +44,7 @@ const App = () => {
             {/* dynamic profile route */}
           </Switch>
         </Router>
-      </AuthProvider>
+      </UserProvider>
     </div>
   );
 }

@@ -1,42 +1,17 @@
-import React, { useRef, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { useAuth } from '../utils/AuthContext'
+import React, { useRef } from 'react'
+import { Link } from 'react-router-dom'
+import useAuth from '../utils/useAuth'
 import twitterLogo from '../styles/twitterLogo.png'
 
 const Login = () => {
     const emailRef = useRef()
     const passwordRef = useRef()
 
-    const history = useHistory()
-    const [error, setError] = useState("")
-    const { signup } = useAuth()
+    const { login, error } = useAuth()
 
     const handleLogin = async (e) => {
         e.preventDefault()
-        // reset error
-        setError("")
-
-        try {
-            const response = await fetch('http://localhost:4000/login', {
-                method: 'POST',
-                body: JSON.stringify({ email: emailRef.current.value, password: passwordRef.current.value }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            })
-            const data = await response.json()
-            // errors: response from server
-            if (data.errors) {
-                setError(data.errors.email || data.errors.password)
-            }// success: redirect to homepage
-            if (data.user) {
-                signup(data.user)
-                history.push("/home")
-            }
-        } catch (err) {
-            console.log(err)
-        }
+        await login(emailRef.current.value, passwordRef.current.value)
     }
 
     return (

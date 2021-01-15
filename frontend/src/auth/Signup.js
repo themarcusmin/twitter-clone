@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-
+import React, { useRef } from 'react'
+import { Link } from 'react-router-dom'
+import useAuth from '../utils/useAuth'
 import twitterLogo from '../styles/twitterLogo.png'
 
 const Signup = () => {
@@ -10,41 +10,17 @@ const Signup = () => {
     const passwordRef = useRef()
     const passwordAgainRef = useRef()
 
-    const history = useHistory()
-    const [error, setError] = useState("")
-
+    const { signup, error, setError } = useAuth()
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        // reset errors
-        setError("")
         // error: password check
         if (passwordRef.current.value !== passwordAgainRef.current.value) {
             return setError("Passwords do not match")
         }
-
-        try {
-            const response = await fetch('http://www.localhost:4000/signup', {
-                method: 'POST',
-                body: JSON.stringify({ username: usernameRef.current.value, fullname: fullnameRef.current.value, email: emailRef.current.value, password: passwordRef.current.value }),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            const data = await response.json()
-            // error: response from server
-            if (data.errors) {
-                setError(data.errors.email || data.errors.fullname || data.errors.password || data.errors.username)
-            }
-            // success: redirect to homepage
-            if (data.user) {
-                // signup(data.user)
-                history.push('/home')
-            }
-        } catch (err) {
-            console.log("test33")
-            console.log(err)
-        }
-        return
+        await signup(usernameRef.current.value, fullnameRef.current.value, emailRef.current.value, passwordRef.current.value)
     }
+
     return (
         <div className="py-3 px-5 md:px-20">
             <form onSubmit={handleRegister} className="flex flex-col items-center space-y-4">

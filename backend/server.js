@@ -1,5 +1,5 @@
+// https://levelup.gitconnected.com/react-template-for-jwt-authentication-with-private-routes-and-redirects-f77c488bfb85
 const express = require("express");
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const mongoose = require("mongoose");
@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
@@ -53,8 +53,9 @@ app.use(authRoutes);
 //     res.send('You got the cookies');
 // })
 
-// app.get('/read-cookies', (req, res) => {
-//     const cookies = req.cookies;
-//     console.log(cookies);
-//     res.json(cookies);
-// })
+app.get('/read-cookies', (req, res) => {
+    const cookies = req.cookies;
+    console.log("header ", req.headers.origin)
+    console.log(cookies);
+    res.json(cookies);
+})

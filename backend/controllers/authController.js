@@ -49,9 +49,10 @@ module.exports.signup_post = async (req, res) => {
     try {
         // User.create() is a promise
         const user = await User.create({ username, fullname, email, password });
+        user.password = undefined;
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(201).json({ user: user._id });
+        res.status(201).json({ user });
     }
     catch (err) {
         const errors = handleErrors(err);
@@ -59,22 +60,43 @@ module.exports.signup_post = async (req, res) => {
     }
 }
 
-// Handle POST request on Account Login
+// user login: send jwt cookie and user json
 module.exports.login_post = async (req, res) => {
     const { email, password } = req.body;
 
     try {
         const user = await User.login(email, password);
+        user.password = undefined;
         const token = createToken(user._id);
-        res.cookie('jwt', token, { domain: 'localhost:3000', httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(200).json({ user: user._id });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.status(200).json({ user });
     } catch (err) {
         const errors = handleErrors(err);
         res.status(400).json({ errors });
     }
 }
 
+// clear jwt cookie on user logout
 module.exports.logout_get = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 });
-    res.redirect('/');
+    res.status(200).send('User is logged out successfully');
+}
+
+// check current user through jwt
+module.exports.currentUser_get = (req, res) => {
+    const token = req.cookies.jwt;
+    if (token) {
+        jwt.verify(token, 'open sesame', async (err, decodedToken) => {
+            if (err) {
+                console.log(err);
+                // user = null;
+            } else {
+                user = await User.findById(decodedToken.id);
+                user.password = undefined
+                res.status(200).json({ user })
+            }
+        })
+    } else {
+        res.status(200).json({ user: null });
+    }
 }
