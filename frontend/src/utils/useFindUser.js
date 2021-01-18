@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 
 const useFindUser = () => {
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetch('/api/auth/currentUser', {
@@ -11,15 +10,13 @@ const useFindUser = () => {
             .then(data => {
                 if (data.user) {
                     setUser(data.user)
-                    setLoading(false)
                 }
-            }).catch(err => setLoading(false))
+            }).catch(err => console.log(err))
     }, [])
 
     return {
         user,
-        setUser,
-        loading
+        setUser
     }
 }
 

@@ -53,9 +53,9 @@ app.use(authRoutes);
 //     res.send('You got the cookies');
 // })
 
-app.get('/read-cookies', (req, res) => {
-    const cookies = req.cookies;
-    console.log("header ", req.headers.origin)
-    console.log(cookies);
-    res.json(cookies);
-})
+// app.get('/read-cookies', (req, res) => {
+//     const cookies = req.cookies;
+//     console.log("header ", req.headers.origin)
+//     console.log(cookies);
+//     res.json(cookies);
+// })

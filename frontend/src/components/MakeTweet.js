@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import userLogo from '../styles/user.svg'
 import Feed from './Feed'
 import { v4 as uuid4 } from 'uuid'
@@ -19,11 +19,11 @@ const MakeTweet = () => {
     }
 
     return (
-        <div className="overflow-y-auto scrollbar w-screen md:w-2/4 border-white">
-            <div className="sticky top-0 bg-twitterBlue h-12 w-full border border-t-0 flex items-center px-4">
+        <Fragment>
+            <div className="sticky-header default-tweet-border">
                 <div className="font-bold">Home</div>
             </div>
-            <div className="h-auto w-full border border-t-0 flex flex-row space-x-4 p-4">
+            <div className="h-auto w-full border border-t-0 border-gray-600 flex flex-row space-x-4 p-4">
                 <img className="w-8 h-8" src={userLogo} alt="" />
                 <div className="w-full space-y-4">
                     <form onSubmit={handleTweet} className="focus:ring-0 focus:outline-none">
@@ -38,10 +38,19 @@ const MakeTweet = () => {
                 </div>
             </div>
             <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
-            {newsfeed.length ? newsfeed.map(data => {
-                return <Feed key={uuid4()} data={data} />
-            }) : null}
-        </div>
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            <Feed data={{ name: "ru", username: "popasf", createdAt: "now", content: "asf" }} />
+            {
+                newsfeed.length ? newsfeed.map(data => {
+                    return <Feed key={uuid4()} data={data} />
+                }) : null
+            }
+        </Fragment>
     )
 }
 

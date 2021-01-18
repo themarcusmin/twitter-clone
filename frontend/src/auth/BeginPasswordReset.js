@@ -4,7 +4,7 @@ import twitterLogo from '../styles/twitterLogo.png'
 
 const BeginPasswordReset = () => {
     return (
-        <div className="py-3 px-5 md:px-20 w-full">
+        <div className="py-8 px-5 md:px-20 w-full">
             <form className="flex flex-col space-y-4 items-center justify-center">
                 <div className="flex flex-row space-x-4 items-center">
                     <img className="w-10 h-10" src={twitterLogo} alt="Twitter Logo" />

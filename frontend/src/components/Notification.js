@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 const Notification = () => {
     return (
-        <div className="w-screen md:w-2/4 border-white">
-            <div className="h-12 w-full border border-t-0 flex items-center px-4">
+        <Fragment>
+            <div className="sticky-header default-tweet-border">
                 <div className="font-bold">Notifications</div>
             </div>
-        </div>
+        </Fragment>
     )
 }
 

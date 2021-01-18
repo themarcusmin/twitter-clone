@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer components {
+    .sticky-header {
+        @apply sticky top-0 z-50 bg-twitterBlue h-12 w-full flex items-center px-4
+    }
+    .default-tweet-border {
+        @apply border border-t-0 border-gray-600
+    }
     .active-svg {
         @apply text-blue-500 text-white w-7
     }
@@ -14,5 +20,17 @@
     }
     .inactive-text {
         @apply group-hover:text-blue-500 font-semibold text-lg
+    }
+    .active-profile-nav {
+        @apply w-1/2 h-full flex items-center justify-center hover:bg-blue-400 hover:bg-opacity-10 cursor-pointer font-bold text-twitterBtn border-b-2 border-twitterBtn
+    }
+    .inactive-profile-nav {
+        @apply w-1/2 h-full flex items-center justify-center hover:bg-blue-400 hover:bg-opacity-10 cursor-pointer font-bold text-gray-400 border-b border-gray-600
+    }
+    .liked-feed-true {
+        @apply w-4 h-4 fill-current text-red-600 group-hover:text-red-600
+    }
+    .liked-feed-false {
+        @apply w-4 h-4 fill-current text-gray-600 group-hover:text-red-600
     }
 }

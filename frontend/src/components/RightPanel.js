@@ -5,7 +5,7 @@ import Search from '../utils/Search'
 const RightPanel = () => {
     const location = useLocation()
     return (
-        <div className="hidden sm:block sm:w-1/4 px-4">
+        <div className="hidden sm:block sm:w-1/6 md:w-1/4 px-4">
             {location.pathname !== "/explore" && (
                 <Search />
             )}

@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logout from '../auth/Logout'
+import { useUserContext } from '../utils/UserContext'
 
 import twitterLogo from '../styles/twitterLogo.png'
 import userLogo from '../styles/user.svg'
 import ellipsis from '../styles/ellipsis.svg'
 
 const Navbar = () => {
+    const { user } = useUserContext()
     // Logout mini-modal
     const [logoutBtn, setLogoutBtn] = useState(false)
     // Toggle Navbar colors
@@ -17,33 +19,10 @@ const Navbar = () => {
     const activeText = (currentNav) => {
         return activeNav === currentNav ? "active-text" : "inactive-text"
     }
-    // const history = useHistory()
-    // const { setUser } = useAuth()
 
-    // const handleLogout = async (e) => {
-    //     e.preventDefault()
-    //     fetch('/api/auth/logout', { method: 'GET' })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             history.push('/')
-    //             setUser(null)
-    //         })
-    //         .catch(err => console.log(err))
-    // }
-
-    const handleTest = async (e) => {
-        e.preventDefault()
-        try {
-            const response = await fetch('/read-cookies')
-            const data = await response.json()
-            console.log(data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
     return (
-        <div className="relative overflow-y-hidden hidden md:block md:w-1/4">
-            <div className="flex flex-col py-3 px-5 md:px-2 space-y-3 w-full justify-start">
+        <div className="relative overflow-y-hidden hidden sm:block sm:w-2/6 md:w-1/4">
+            <div className="flex flex-col py-3 px-2 space-y-3 w-full justify-start">
                 <Link to="/home">
                     <div className="hover:bg-gray-800 rounded-full flex items-center justify-center w-12 h-12 ml-2">
                         <img className="w-7" src={twitterLogo} alt="Twitter Logo" />
@@ -73,7 +52,7 @@ const Navbar = () => {
                         <div className={activeText("notification")}>Notifications</div>
                     </div>
                 </Link>
-                <Link to="/profile">
+                <Link to="/profile/mainuser">
                     <div onClick={() => setActiveNav("profile")} className="group flex flex-row space-x-3 hover:bg-gray-800 w-min rounded-full py-2 px-4">
                         <svg className={activeSvg("profile")} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -81,14 +60,15 @@ const Navbar = () => {
                         <div className={activeText("profile")}>Profile</div>
                     </div>
                 </Link>
-                {/* Test */}
-                <button onClick={handleTest}>Read Cookie TEST</button>
+                <Link to="/profile/sample">
+                    <div>sample</div>
+                </Link>
                 {/* Clickable Username */}
-                <div onClick={() => setLogoutBtn(!logoutBtn)} className="absolute bottom-3 cursor-pointer group flex flex-row items-center hover:bg-gray-800 w-auto rounded-full py-2 px-4">
+                <div onClick={() => setLogoutBtn(!logoutBtn)} className="absolute bottom-3 cursor-pointer group flex flex-row items-center hover:bg-gray-800 w-auto rounded-full py-2 px-4 md:px-3 sm:px-2">
                     <img className="w-8 h-8" src={userLogo} alt="Profile Icon" />
                     <div className="mx-4 group-hover:text-blue-500 flex flex-col text-sm">
-                        <div className="font-bold">Full Name</div>
-                        <div>@username</div>
+                        <div className="font-bold sm:text-xs">{`${user.fullname}`}</div>
+                        <div className="sm:text-xs">{`@${user.username}`}</div>
                     </div>
                     <img className="w-6 h-6" src={ellipsis} alt="" />
                 </div>

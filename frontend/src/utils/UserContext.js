@@ -8,10 +8,10 @@ export const useUserContext = () => {
 }
 
 export const UserProvider = ({ children }) => {
-    const { user, setUser, loading } = useFindUser()
+    const { user, setUser } = useFindUser()
 
     return (
-        <UserContext.Provider value={{ user, setUser, loading }}>
+        <UserContext.Provider value={{ user, setUser }}>
             {children}
         </UserContext.Provider>
     )

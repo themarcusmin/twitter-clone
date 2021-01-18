@@ -8,7 +8,8 @@ module.exports = {
                 'twitterLightBlue': '#253341',
                 'twitterTextBlue': '#1B95E0',
                 'twitterBtn': '#35a2f0',
-                'twitterBtnHover': '#257cba'
+                'twitterBtnHover': '#257cba',
+                'twitterProfileCover': '#3D5466'
             },
             wordBreak: ['hover', 'focus'],
             stroke: ['hover', 'focus'],
@@ -22,6 +23,7 @@ module.exports = {
             opacity: ['disabled'],
             textColor: ['group-hover', 'group-focus']
         },
+        fill: ['hover', 'focus'],
     },
     plugins: [require('@tailwindcss/forms'),
     require('tailwind-scrollbar'),],
