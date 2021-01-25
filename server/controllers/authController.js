@@ -92,10 +92,12 @@ module.exports.currentUser_get = (req, res) => {
                 // user = null;
             } else {
                 user = await User.findById(decodedToken.id);
-                user.password = undefined
-                res.status(200).json({ user })
+                user.password = undefined;
+                console.log("userid: ", user._id);
+                res.status(200).json({ user });
             }
         })
+        console.log("erverytime")
     } else {
         res.status(200).json({ user: null });
     }

@@ -19,6 +19,25 @@ const Navbar = () => {
     const activeText = (currentNav) => {
         return activeNav === currentNav ? "active-text" : "inactive-text"
     }
+    const notificationSeen = () => {
+        console.log("update db and remove red popup")
+    }
+    //test
+    const redisPublish = async () => {
+        try {
+            const response = await fetch('/test/pub', {
+                method: 'POST',
+                body: JSON.stringify({ tweet: 'How are yall?' }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            const data = await response.json()
+            console.log(data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <div className="relative overflow-y-hidden hidden sm:block sm:w-2/6 md:w-1/4">
@@ -45,11 +64,18 @@ const Navbar = () => {
                     </div>
                 </Link>
                 <Link to="/notifications">
-                    <div onClick={() => setActiveNav("notification")} className="group flex flex-row space-x-3 hover:bg-gray-800 w-min rounded-full py-2 px-4">
+                    <div onClick={() => {
+                        setActiveNav("notification");
+                        notificationSeen();
+                    }} className="relative group flex flex-row space-x-3 hover:bg-gray-800 w-min rounded-full py-2 px-4">
                         <svg className={activeSvg("notification")} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                         <div className={activeText("notification")}>Notifications</div>
+                        <div className="absolute top-0 right-0 rounded-full w-6 h-6 text-white text-center opacity-80 bg-red-400 group-hover:bg-red-600 group-hover:opacity-100">
+                            1
+                        </div>
+                        {/* if activenav is notification delete red popup */}
                     </div>
                 </Link>
                 <Link to="/profile/mainuser">
@@ -63,6 +89,8 @@ const Navbar = () => {
                 <Link to="/profile/sample">
                     <div>sample</div>
                 </Link>
+                <button type="button" onClick={() => redisPublish()}>pub sth</button>
+
                 {/* Clickable Username */}
                 <div onClick={() => setLogoutBtn(!logoutBtn)} className="absolute bottom-3 cursor-pointer group flex flex-row items-center hover:bg-gray-800 w-auto rounded-full py-2 px-4 md:px-3 sm:px-2">
                     <img className="w-8 h-8" src={userLogo} alt="Profile Icon" />
