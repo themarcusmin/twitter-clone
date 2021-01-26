@@ -5,6 +5,9 @@ const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+// remember to ser requireAuth for nonauth routes
+const { requireAuth } = require('./middleware/authMiddleware');
+const session = require('express-session');
 
 dotenv.config();
 
@@ -17,6 +20,11 @@ const corsConfig = {
 app.use(cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
+app.use(session({
+    secret: 'mountain-bike',
+    resave: false,
+    saveUninitialized: false,
+}));
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -57,12 +65,34 @@ app.use(authRoutes);
 //     res.send('You got the cookies');
 // })
 
-// app.get('/read-cookies', (req, res) => {
-//     const cookies = req.cookies;
-//     console.log("header ", req.headers.origin)
-//     console.log(cookies);
-//     res.json(cookies);
-// })
+// test
+// session userid is working
+const jwt = require("jsonwebtoken");
+const User = require("./model/User");
+
+app.get('/read-cookies', (req, res) => {
+    // const cookies = req.cookies;
+    // console.log("header ", req.headers.origin)
+    // console.log(cookies);
+    // res.json(cookies);
+    console.log("herhe", req.session.userID);
+    console.time('part1')   //start timer for part 1.
+    const token = req.cookies.jwt;
+    if (token) {
+        jwt.verify(token, 'open sesame', async (err, decodedToken) => {
+            // jwt malformed or other errors
+            if (err) {
+                console.log(err);
+
+            } else {
+                user = await User.findById(decodedToken.id);
+                console.log(user)
+                console.log("userid: ", user._id);
+            }
+        })
+    }
+    console.timeEnd('part1')
+})
 
 const redis = require("redis");
 const client = redis.createClient();

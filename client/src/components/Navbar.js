@@ -38,6 +38,15 @@ const Navbar = () => {
             console.log(err)
         }
     }
+    const testuserid = async () => {
+        try {
+            const response = await fetch('/read-cookies', {
+                method: 'GET'
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <div className="relative overflow-y-hidden hidden sm:block sm:w-2/6 md:w-1/4">
@@ -89,8 +98,9 @@ const Navbar = () => {
                 <Link to="/profile/sample">
                     <div>sample</div>
                 </Link>
+                {/* test */}
                 <button type="button" onClick={() => redisPublish()}>pub sth</button>
-
+                <button type="button" onClick={() => testuserid()}>test userid</button>
                 {/* Clickable Username */}
                 <div onClick={() => setLogoutBtn(!logoutBtn)} className="absolute bottom-3 cursor-pointer group flex flex-row items-center hover:bg-gray-800 w-auto rounded-full py-2 px-4 md:px-3 sm:px-2">
                     <img className="w-8 h-8" src={userLogo} alt="Profile Icon" />

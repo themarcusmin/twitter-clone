@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const { createProfile } = require("../model/Profile");
 const jwt = require("jsonwebtoken");
 
 // Handle Errors related to Signup
@@ -50,6 +51,9 @@ module.exports.signup_post = async (req, res) => {
         // User.create() is a promise
         const user = await User.create({ username, fullname, email, password });
         user.password = undefined;
+        // create redis profile
+        createProfile(user._id, username, fullname);
+        // set token
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         res.status(201).json({ user });
@@ -76,28 +80,34 @@ module.exports.login_post = async (req, res) => {
     }
 }
 
-// clear jwt cookie on user logout
+// clear jwt cookie on user logout & destroy session
 module.exports.logout_get = (req, res) => {
+    req.session.destroy();
     res.cookie('jwt', '', { maxAge: 1 });
     res.status(200).send('User is logged out successfully');
 }
 
-// check current user through jwt
+// check current user through jwt & store uid in session
 module.exports.currentUser_get = (req, res) => {
     const token = req.cookies.jwt;
     if (token) {
         jwt.verify(token, 'open sesame', async (err, decodedToken) => {
+            // jwt malformed or other errors
             if (err) {
                 console.log(err);
-                // user = null;
+                res.status(200).json({ user: null });
             } else {
                 user = await User.findById(decodedToken.id);
                 user.password = undefined;
                 console.log("userid: ", user._id);
+                // store userid in session
+                if (!req.session.userID) {
+                    req.session.userID = user._id;
+                }
                 res.status(200).json({ user });
             }
         })
-        console.log("erverytime")
+        console.log("get_currentUser");
     } else {
         res.status(200).json({ user: null });
     }
