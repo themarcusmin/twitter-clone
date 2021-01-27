@@ -38,10 +38,15 @@ function unfollow(followerID, followeeID) {
 }
 
 // Getter
-function getProfileJSON(id) {
-    return client.hgetall('user:' + id, (err, value) => {
-        if (err) throw err;
-        console.log(value);
+async function getProfileJSON(id) {
+    return new Promise((resolve, reject) => {
+        client.hgetall('user:' + id, (err, value) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(value);
+            }
+        })
     })
 }
 

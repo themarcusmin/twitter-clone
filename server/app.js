@@ -5,8 +5,6 @@ const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
-// remember to ser requireAuth for nonauth routes
-const { requireAuth } = require('./middleware/authMiddleware');
 const session = require('express-session');
 
 dotenv.config();
@@ -46,11 +44,16 @@ mongoose.connect(
     .then((result) => app.listen(4000))
     .catch((err) => console.log(err));
 
+// import middleware
+const { requireAuth } = require('./middleware/authMiddleware')
+
 // import routes
 const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 // routes
 app.use(authRoutes);
+app.use(profileRoutes, requireAuth);
 
 // const tweetRoutes = require("./routes/tweetRoutes");
 // app.use(tweetRoutes);

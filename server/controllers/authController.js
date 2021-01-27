@@ -51,8 +51,8 @@ module.exports.signup_post = async (req, res) => {
         // User.create() is a promise
         const user = await User.create({ username, fullname, email, password });
         user.password = undefined;
-        // create redis profile
-        createProfile(user._id, username, fullname);
+        // create redis profile: redis accepts string over number
+        createProfile(user._id.toString(), username, fullname);
         // set token
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });

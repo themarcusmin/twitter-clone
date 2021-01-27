@@ -1,41 +1,41 @@
-import React, { Fragment, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import React, { Fragment, useState, useEffect } from 'react'
+import { useHistory, useParams, Link } from 'react-router-dom'
 
 import backArrow from './svg/backArrow.svg'
 import calendar from './svg/calendar.svg'
 import userLogo from '../../styles/user.svg'
-// import ImageUpload from './ImageUpload'
 
 const ProfileTweet = React.lazy(() => import('./ProfileTweet'))
 const ProfileLike = React.lazy(() => import('./ProfileLike'))
 
+function UnixTimeToMonthYear(t) {
+    return new Date(t).toLocaleString('default', { month: 'long', year: 'numeric' })
+}
+
 const Profile = () => {
     const history = useHistory()
     let { username } = useParams()
-    // async function handleProfile(e) {
-    //     e.preventDefault();
-    //     try {
-    //         const formData = new FormData();
-    //         formData.append('img', e.target.files[0])
-    //         const response = await fetch('http://www.localhost:4000/api/photo', {
-    //             method: 'POST',
-    //             body: formData
-    //         })
-    //         if (!response.ok) {
-    //             throw new Error("FAILED...")
-    //         }
-    //         const data = await response.json()
-    //         return data
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // }
+
+    const [profile, setProfile] = useState(null)
+    // fetch profile data
+    useEffect(() => {
+        // setLoading(true)
+        async function fetchData() {
+            const response = await fetch('/api/profile/marcopolo', {
+                method: 'GET'
+            })
+            const data = await response.json()
+            setProfile(data)
+        }
+        fetchData()
+    }, [])
 
     // toggle profile navbar between tweets and likes
     const [activeNav, setActiveNav] = useState("Tweets")
     const cssNav = (currentNav) => {
         return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
     }
+
     return (
         <Fragment>
             {/* header */}
@@ -44,8 +44,17 @@ const Profile = () => {
                     <img className="w-4 h-4" src={backArrow} alt="Back Button" />
                 </button>
                 <div className="flex flex-col">
-                    <div className="font-bold">{`${username}`}</div>
-                    <div className="text-xs text-gray-400">1 Tweet</div>
+                    {profile ? (
+                        <Fragment>
+                            <div className="font-bold">{`${profile.username}`}</div>
+                            <div className="text-xs text-gray-400">{`${profile.tweetCount} Tweets`}</div>
+                        </Fragment>
+                    ) : (
+                            <Fragment>
+                                <div className="bg-gray-600 w-20 h-4 rounded-md mb-2" />
+                                <div className="bg-gray-600 w-10 h-4 rounded-md" />
+                            </Fragment>
+                        )}
                 </div>
             </div>
             {/* general details */}
@@ -57,16 +66,50 @@ const Profile = () => {
                         Edit Profile
                     </button>
                     <div className="flex flex-col">
-                        <div className="text-sm font-bold text-white">FullNAMMEE</div>
-                        <div className="">@username</div>
+                        {profile ? (
+                            <Fragment>
+                                <div className="text-sm font-bold text-white">{`${profile.fullname}`}</div>
+                                <div className="">{`@${profile.username}`}</div>
+                            </Fragment>
+                        ) : (
+                                <Fragment>
+                                    <div className="bg-gray-600 w-20 h-4 rounded-md mb-2" />
+                                    <div className="bg-gray-600 w-20 h-4 rounded-md" />
+                                </Fragment>
+                            )}
                     </div>
                     <div className="flex flex-row space-x-1">
                         <img className="h-4 w-4" src={calendar} alt="Calender Logo" />
-                        <div>Joined Date</div>
+                        {profile ? (
+                            <div>{"Joined " + UnixTimeToMonthYear(parseInt(profile.signup))}</div>
+                        ) : (
+                                <div className="bg-gray-600 w-14 h-4 rounded-md" />
+                            )}
                     </div>
                     <div className="flex flex-row space-x-2">
-                        <div className="cursor-pointer hover:underline"><span className="text-white font-bold">10</span> Following</div>
-                        <div className="cursor-pointer hover:underline"><span className="text-white font-bold">10</span> Followers</div>
+                        {profile ? (
+                            <Fragment>
+                                <Link to={`/profile/${username}/following`}>
+                                    <div className="cursor-pointer hover:underline">
+                                        <span className="text-white font-bold">
+                                            {`${profile.following}`}
+                                        </span> Following
+                                </div>
+                                </Link>
+                                <Link to={`/profile/${username}/followers`}>
+                                    <div className="cursor-pointer hover:underline">
+                                        <span className="text-white font-bold">
+                                            {`${profile.followers}`}
+                                        </span> Followers
+                                    </div>
+                                </Link>
+                            </Fragment>
+                        ) : (
+                                <Fragment>
+                                    <div className="bg-gray-600 w-14 h-4 rounded-md" />
+                                    <div className="bg-gray-600 w-14 h-4 rounded-md" />
+                                </Fragment>
+                            )}
                     </div>
                 </div>
             </div>

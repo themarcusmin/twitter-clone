@@ -8,6 +8,8 @@ import MakeTweet from './components/MakeTweet'
 import Explore from './components/Explore'
 import Notification from "./components/Notification"
 import Profile from './components/Profile/Profile'
+import Followers from './components/Profile/Followers'
+import Following from './components/Profile/Following'
 
 const AuthenticatedApp = () => {
     return (
@@ -26,8 +28,14 @@ const AuthenticatedApp = () => {
                             <Route path="/notifications">
                                 <Notification />
                             </Route>
-                            <Route path="/profile/:username">
+                            <Route exact path="/profile/:username">
                                 <Profile />
+                            </Route>
+                            <Route path="/profile/:username/followers">
+                                <Followers />
+                            </Route>
+                            <Route path="/profile/:username/following">
+                                <Following />
                             </Route>
                             <Route path="/">
                                 <Redirect to="/home" />
