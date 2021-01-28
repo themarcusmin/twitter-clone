@@ -37,7 +37,7 @@ const Network = ({ Component, Type }) => {
             {/* header */}
             <div className="sticky-header px-0 w-full h-auto default-tweet-border border-b-0 flex flex-col">
                 <div className="flex flex-row px-4 py-2 space-x-3 place-self-start place-items-center">
-                    <button onClick={() => history.push(`/profile/${username}`)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-400 hover:bg-opacity-10">
+                    <button onClick={() => history.push(`/${username}`)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-400 hover:bg-opacity-10">
                         <img className="w-4 h-4" src={backArrow} alt="Back Button" />
                     </button>
                     <div className="flex flex-col">
@@ -56,10 +56,10 @@ const Network = ({ Component, Type }) => {
                 </div>
                 {/* toggler */}
                 <div className="h-12 w-full flex flex-row text-sm">
-                    <Link to={`/profile/${username}/followers`} onClick={() => setActiveNav("followers")} className={cssNav("followers")}>
+                    <Link to={`/${username}/followers`} onClick={() => setActiveNav("followers")} className={cssNav("followers")}>
                         Followers
                     </Link>
-                    <Link to={`/profile/${username}/following`} onClick={() => setActiveNav("following")} className={cssNav("following")}>
+                    <Link to={`/${username}/following`} onClick={() => setActiveNav("following")} className={cssNav("following")}>
                         Following
                     </Link>
                 </div>

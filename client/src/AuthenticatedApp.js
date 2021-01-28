@@ -24,19 +24,19 @@ const AuthenticatedApp = () => {
                             <Route path="/home">
                                 <MakeTweet />
                             </Route>
-                            <Route path="/explore">
+                            <Route exact path="/explore">
                                 <Explore />
                             </Route>
-                            <Route path="/notifications">
+                            <Route exact path="/notifications">
                                 <Notification />
                             </Route>
-                            <Route exact path="/profile/:username">
+                            <Route path="/:username">
                                 <Profile />
                             </Route>
-                            <Route path="/profile/:username/followers">
+                            <Route path="/:username/followers">
                                 <Network Component={Followers} Type="followers" />
                             </Route>
-                            <Route path="/profile/:username/following">
+                            <Route path="/:username/following">
                                 <Network Component={Following} Type="following" />
                             </Route>
                             <Route path="/">

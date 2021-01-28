@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { useHistory, useParams, Link } from 'react-router-dom'
+import { useHistory, useParams, Link, Redirect } from 'react-router-dom'
 import Profile404 from './Profile404'
 
 import backArrow from './svg/backArrow.svg'
@@ -13,6 +13,8 @@ import userLogo from '../../styles/user.svg'
  * 3 - render profile page if fetching is successful
  */
 
+const existingURLs = ["home", "explore", "notifications"]
+
 const ProfileTweet = React.lazy(() => import('./ProfileTweet'))
 const ProfileLike = React.lazy(() => import('./ProfileLike'))
 
@@ -23,24 +25,44 @@ function UnixTimeToMonthYear(t) {
 const Profile = () => {
     const history = useHistory()
     const { username } = useParams()
+    // if username is in existingURLs
+    const [redirect, setRedirect] = useState(false)
+    // if username does not exist
     const [error, setError] = useState(false)
+    // if username exists
     const [profile, setProfile] = useState(null)
     // fetch profile data
     useEffect(() => {
+        console.log("times")
         async function fetchData() {
+            setRedirect(false)
+            setError(false)
+            if (existingURLs.includes(username)) {
+                return setRedirect(true)
+            }
             const response = await fetch(`/api/profile/${username}`, {
                 method: 'GET'
             })
             const data = await response.json()
-            setProfile(data)
+            console.log("first data: ", data)
+            if (data.error) {
+                setError(true)
+            } else {
+                setProfile(data)
+            }
         }
         fetchData()
-    }, [])
+    }, [username])
 
     // toggle profile navbar between tweets and likes
     const [activeNav, setActiveNav] = useState("Tweets")
     const cssNav = (currentNav) => {
         return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
+    }
+
+    // redirect to specified url to prevent component stacking
+    if (redirect) {
+        return <Redirect to={`/${username}`} />
     }
 
     return (
@@ -101,14 +123,14 @@ const Profile = () => {
                             <div className="flex flex-row space-x-2">
                                 {profile ? (
                                     <Fragment>
-                                        <Link to={`/profile/${username}/following`}>
+                                        <Link to={`/${username}/following`}>
                                             <div className="cursor-pointer hover:underline">
                                                 <span className="text-white font-bold">
                                                     {`${profile.following}`}
                                                 </span> Following
                                 </div>
                                         </Link>
-                                        <Link to={`/profile/${username}/followers`}>
+                                        <Link to={`/${username}/followers`}>
                                             <div className="cursor-pointer hover:underline">
                                                 <span className="text-white font-bold">
                                                     {`${profile.followers}`}
