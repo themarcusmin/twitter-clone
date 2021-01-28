@@ -9,7 +9,8 @@ module.exports = {
                 'twitterTextBlue': '#1B95E0',
                 'twitterBtn': '#35a2f0',
                 'twitterBtnHover': '#257cba',
-                'twitterProfileCover': '#3D5466'
+                'twitterProfileCover': '#3D5466',
+                'twitterBlueError': '#15202B',
             },
             wordBreak: ['hover', 'focus'],
             stroke: ['hover', 'focus'],
