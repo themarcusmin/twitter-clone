@@ -24,7 +24,10 @@ function decrTweet(id) {
 
 // handle follow / unfollow
 function follow(followerID, followeeID) {
+    let currentTime = Date.now();
     return Promise.all([
+        client.zadd('user:' + followerID + ':following', currentTime, followeeID),
+        client.zadd('user:' + followeeID + ':followers', currentTime, followerID),
         client.hincrby('user:' + followerID, 'following', 1),
         client.hincrby('user:' + followeeID, 'followers', 1),
     ])
@@ -32,6 +35,8 @@ function follow(followerID, followeeID) {
 
 function unfollow(followerID, followeeID) {
     return Promise.all([
+        client.zrem('user:' + followerID + ':following', followeeID),
+        client.zrem('user:' + followeeID + ':followers', followerID),
         client.hincrby('user:' + followerID, 'following', -1),
         client.hincrby('user:' + followeeID, 'followers', -1),
     ])

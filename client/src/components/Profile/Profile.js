@@ -1,28 +1,33 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 import { useHistory, useParams, useLocation, Link } from 'react-router-dom'
-import Profile404 from './Profile404'
+import { useUserContext } from '../../utils/UserContext'
 
+import FollowButton from './FollowButton'
+import UnfollowModal from './UnfollowModal'
+
+import Profile404 from './Profile404'
 import backArrow from './svg/backArrow.svg'
 import calendar from './svg/calendar.svg'
 import userLogo from '../../styles/user.svg'
 
+
 /**
  * function:
- * 1 - render loading page if fetching
- * 2 - render error page if fetching fails
- * 3 - render profile page if fetching is successful
+ * 1 - toggle view between tweets and likes
+ * 2 - render loading components if fetching
+ * 3 - render error page if fetching fails
+ * 4 - render profile page if fetching is successful
  */
-
-const ProfileTweet = React.lazy(() => import('./ProfileTweet'))
-const ProfileLike = React.lazy(() => import('./ProfileLike'))
 
 function UnixTimeToMonthYear(t) {
     return new Date(t).toLocaleString('default', { month: 'long', year: 'numeric' })
 }
 
-const Profile = ({ Component }) => {
+const Profile = ({ Component, Type }) => {
     const history = useHistory()
     const location = useLocation()
+    // get current user to match against params
+    const { user } = useUserContext()
     const { username } = useParams()
     // if username does not exist
     const [error, setError] = useState(false)
@@ -49,10 +54,24 @@ const Profile = ({ Component }) => {
     }, [username])
 
     // toggle profile navbar between tweets and likes
-    const [activeNav, setActiveNav] = useState("Tweets")
+    const [activeNav, setActiveNav] = useState(Type)
     const cssNav = (currentNav) => {
         return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
     }
+    function handleTweetsNav(e) {
+        e.preventDefault()
+        setActiveNav("Tweets")
+        history.replace(`/${username}`)
+    }
+    function handleLikesNav(e) {
+        e.preventDefault()
+        setActiveNav("Likes")
+        history.replace(`/${username}/likes`)
+    }
+
+    // follow/following/unfollow
+    const [following, setFollowing] = useState(false)
+    const modal = useRef(null)
 
     return (
         error ? (
@@ -83,9 +102,21 @@ const Profile = ({ Component }) => {
                         <div className="bg-twitterProfileCover h-40 relative"></div>
                         <img className="absolute w-28 h-28 top-28 left-4 border-4 border-twitterBlue rounded-full" src={userLogo} alt="Profile Icon" />
                         <div className="relative h-40 flex flex-col py-2 justify-end px-3 space-y-2 text-xs text-gray-400 ">
-                            <button className="absolute m-3 right-0 top-0 px-3 rounded-full border border-twitterBtn text-twitterBtn hover:bg-blue-400 hover:bg-opacity-10 font-bold text-sm py-2 focus:outline-none">
-                                Edit Profile
-                    </button>
+                            {user.username === username ? (
+                                <button className="absolute m-3 right-0 top-0 px-3 rounded-full border border-twitterBtn text-twitterBtn hover:bg-blue-400 hover:bg-opacity-10 font-bold text-sm py-2 focus:outline-none">
+                                    Edit Profile
+                                </button>
+                            ) : (
+                                    <div onClick={() => {
+                                        if (following) {
+                                            modal.current.open()
+                                        }
+                                        setFollowing(!following)
+                                    }}>
+                                        <FollowButton follow={following} />
+                                    </div>
+
+                                )}
                             <div className="flex flex-col">
                                 {profile ? (
                                     <Fragment>
@@ -138,21 +169,16 @@ const Profile = ({ Component }) => {
                     </div>
                     {/* navbar */}
                     <div className="h-10 w-full flex flex-row text-sm border-l border-r border-gray-600">
-                        <div onClick={() => setActiveNav("Tweets")} className={cssNav("Tweets")}>
+                        <div onClick={handleTweetsNav} className={cssNav("Tweets")}>
                             Tweets
                         </div>
-                        <div onClick={() => setActiveNav("Likes")} className={cssNav("Likes")}>
+                        <div onClick={handleLikesNav} className={cssNav("Likes")}>
                             Likes
                         </div>
                     </div>
-                    {/* render tweets or likes */}
-                    {
-                        activeNav === "Tweets" ? (
-                            <ProfileTweet />
-                        ) : (
-                                <ProfileLike />
-                            )
-                    }
+                    {/* render inherited component: tweets or likes */}
+                    <Component />
+                    <UnfollowModal ref={modal} username={username} />
                 </Fragment>
             )
     )

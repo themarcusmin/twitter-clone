@@ -26,6 +26,9 @@ const AuthenticatedApp = () => {
                     <Navbar />
                     <div className="overflow-y-auto scrollbar w-screen md:w-2/4 sm:w-3/6 border-white">
                         <Switch>
+                            <Route exact path="/">
+                                <Redirect to="/home" />
+                            </Route>
                             <Route exact path="/home">
                                 <MakeTweet />
                             </Route>
@@ -36,10 +39,10 @@ const AuthenticatedApp = () => {
                                 <Notification />
                             </Route>
                             <Route exact path="/:username">
-                                <Profile Component={ProfileTweet} />
+                                <Profile Component={ProfileTweet} Type="Tweets" />
                             </Route>
-                            <Route path="/:username/likes">
-                                <Profile Component={ProfileLike} />
+                            <Route exact path="/:username/likes">
+                                <Profile Component={ProfileLike} Type="Likes" />
                             </Route>
                             <Route path="/:username/followers">
                                 <Network Component={Followers} Type="followers" />
@@ -47,9 +50,6 @@ const AuthenticatedApp = () => {
                             <Route path="/:username/following">
                                 <Network Component={Following} Type="following" />
                             </Route>
-                            {/* <Route path="/">
-                                <Redirect to="/home" />
-                            </Route> */}
                             <Route path="*">
                                 <NoMatch />
                             </Route>

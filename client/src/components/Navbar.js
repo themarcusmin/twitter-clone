@@ -51,10 +51,8 @@ const Navbar = () => {
     return (
         <div className="relative overflow-y-hidden hidden sm:block sm:w-2/6 md:w-1/4">
             <div className="flex flex-col py-3 px-2 space-y-3 w-full justify-start">
-                <Link to="/home">
-                    <div className="hover:bg-gray-800 rounded-full flex items-center justify-center w-12 h-12 ml-2">
-                        <img className="w-7" src={twitterLogo} alt="Twitter Logo" />
-                    </div>
+                <Link to="/home" className="hover:bg-gray-800 rounded-full flex items-center justify-center w-12 h-12 ml-2">
+                    <img className="w-7" src={twitterLogo} alt="Twitter Logo" />
                 </Link>
                 <Link to="/home">
                     <div onClick={() => setActiveNav("home")} className="group flex flex-row space-x-3 hover:bg-gray-800 w-min rounded-full py-2 px-4">

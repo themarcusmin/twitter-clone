@@ -4,7 +4,7 @@
 
 @layer components {
     .sticky-header {
-        @apply sticky top-0 z-50 bg-twitterBlue h-12 w-full flex items-center px-4
+        @apply sticky top-0 z-10 bg-twitterBlue h-12 w-full flex items-center px-4
     }
     .default-tweet-border {
         @apply border border-t-0 border-gray-600
@@ -20,6 +20,12 @@
     }
     .inactive-text {
         @apply group-hover:text-blue-500 font-semibold text-lg
+    }
+    .profile-follow {
+        @apply w-24 text-center absolute m-3 right-0 top-0 px-3 rounded-full border border-twitterBtn text-twitterBtn hover:bg-blue-400 hover:bg-opacity-10 font-bold text-sm py-2 focus:outline-none
+    }
+    .profile-following {
+        @apply w-24 text-center absolute m-3 right-0 top-0 px-3 rounded-full bg-twitterBtn text-white hover:bg-red-500 font-bold text-sm py-2 focus:outline-none
     }
     .active-profile-nav {
         @apply w-1/2 h-full flex items-center justify-center hover:bg-blue-400 hover:bg-opacity-10 cursor-pointer font-bold text-twitterBtn border-b-2 border-twitterBtn
