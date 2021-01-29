@@ -7,21 +7,26 @@ import RightPanel from './components/RightPanel'
 import MakeTweet from './components/MakeTweet'
 import Explore from './components/Explore'
 import Notification from "./components/Notification"
-// all profile-related components
+// nomatch route
+import NoMatch from './components/NoMatch'
+// profile-related components
 import Profile from './components/Profile/Profile'
 import Network from './components/Profile/Network'
 import Followers from './components/Profile/Followers'
 import Following from './components/Profile/Following'
+import ProfileTweet from './components/Profile/ProfileTweet'
+import ProfileLike from './components/Profile/ProfileLike'
 
 const AuthenticatedApp = () => {
     return (
         <SocketProvider>
             <Router>
-                <Switch>
-                    <div className="h-screen flex flex-row">
-                        <Navbar />
-                        <div className="overflow-y-auto scrollbar w-screen md:w-2/4 sm:w-3/6 border-white">
-                            <Route path="/home">
+
+                <div className="h-screen flex flex-row">
+                    <Navbar />
+                    <div className="overflow-y-auto scrollbar w-screen md:w-2/4 sm:w-3/6 border-white">
+                        <Switch>
+                            <Route exact path="/home">
                                 <MakeTweet />
                             </Route>
                             <Route exact path="/explore">
@@ -30,8 +35,11 @@ const AuthenticatedApp = () => {
                             <Route exact path="/notifications">
                                 <Notification />
                             </Route>
-                            <Route path="/:username">
-                                <Profile />
+                            <Route exact path="/:username">
+                                <Profile Component={ProfileTweet} />
+                            </Route>
+                            <Route path="/:username/likes">
+                                <Profile Component={ProfileLike} />
                             </Route>
                             <Route path="/:username/followers">
                                 <Network Component={Followers} Type="followers" />
@@ -39,13 +47,17 @@ const AuthenticatedApp = () => {
                             <Route path="/:username/following">
                                 <Network Component={Following} Type="following" />
                             </Route>
-                            <Route path="/">
+                            {/* <Route path="/">
                                 <Redirect to="/home" />
+                            </Route> */}
+                            <Route path="*">
+                                <NoMatch />
                             </Route>
-                        </div>
-                        <RightPanel />
+                        </Switch>
                     </div>
-                </Switch>
+                    <RightPanel />
+                </div>
+
             </Router>
         </SocketProvider>
     )

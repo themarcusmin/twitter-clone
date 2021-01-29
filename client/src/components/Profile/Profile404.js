@@ -26,7 +26,7 @@ const Profile404 = ({ username }) => {
                 </div>
             </div>
             <div className="h-full default-tweet-border flex flex-col items-center justify-start pt-10">
-                <div className="text-lg font-bold">This account doesn't exist</div>
+                <div className="text-lg font-bold">This account doesn't exist!</div>
                 <div className="text-sm text-gray-500">Try searching for another.</div>
             </div>
         </Fragment>

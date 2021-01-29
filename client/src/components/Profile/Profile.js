@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { useHistory, useParams, Link, Redirect } from 'react-router-dom'
+import { useHistory, useParams, useLocation, Link } from 'react-router-dom'
 import Profile404 from './Profile404'
 
 import backArrow from './svg/backArrow.svg'
@@ -13,8 +13,6 @@ import userLogo from '../../styles/user.svg'
  * 3 - render profile page if fetching is successful
  */
 
-const existingURLs = ["home", "explore", "notifications"]
-
 const ProfileTweet = React.lazy(() => import('./ProfileTweet'))
 const ProfileLike = React.lazy(() => import('./ProfileLike'))
 
@@ -22,24 +20,20 @@ function UnixTimeToMonthYear(t) {
     return new Date(t).toLocaleString('default', { month: 'long', year: 'numeric' })
 }
 
-const Profile = () => {
+const Profile = ({ Component }) => {
     const history = useHistory()
+    const location = useLocation()
     const { username } = useParams()
-    // if username is in existingURLs
-    const [redirect, setRedirect] = useState(false)
     // if username does not exist
     const [error, setError] = useState(false)
     // if username exists
     const [profile, setProfile] = useState(null)
-    // fetch profile data
+
     useEffect(() => {
         console.log("times")
         async function fetchData() {
-            setRedirect(false)
             setError(false)
-            if (existingURLs.includes(username)) {
-                return setRedirect(true)
-            }
+            // fetch profile data
             const response = await fetch(`/api/profile/${username}`, {
                 method: 'GET'
             })
@@ -58,11 +52,6 @@ const Profile = () => {
     const [activeNav, setActiveNav] = useState("Tweets")
     const cssNav = (currentNav) => {
         return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
-    }
-
-    // redirect to specified url to prevent component stacking
-    if (redirect) {
-        return <Redirect to={`/${username}`} />
     }
 
     return (
@@ -123,19 +112,19 @@ const Profile = () => {
                             <div className="flex flex-row space-x-2">
                                 {profile ? (
                                     <Fragment>
-                                        <Link to={`/${username}/following`}>
+                                        <Link to={`${location.pathname}/following`}>
                                             <div className="cursor-pointer hover:underline">
                                                 <span className="text-white font-bold">
                                                     {`${profile.following}`}
                                                 </span> Following
-                                </div>
+                                            </div>
                                         </Link>
-                                        <Link to={`/${username}/followers`}>
+                                        <Link to={`${location.pathname}/followers`}>
                                             <div className="cursor-pointer hover:underline">
                                                 <span className="text-white font-bold">
                                                     {`${profile.followers}`}
                                                 </span> Followers
-                                    </div>
+                                            </div>
                                         </Link>
                                     </Fragment>
                                 ) : (
@@ -151,10 +140,10 @@ const Profile = () => {
                     <div className="h-10 w-full flex flex-row text-sm border-l border-r border-gray-600">
                         <div onClick={() => setActiveNav("Tweets")} className={cssNav("Tweets")}>
                             Tweets
-                    </div>
+                        </div>
                         <div onClick={() => setActiveNav("Likes")} className={cssNav("Likes")}>
                             Likes
-                    </div>
+                        </div>
                     </div>
                     {/* render tweets or likes */}
                     {
