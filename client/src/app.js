@@ -7,7 +7,7 @@ const UnAuthenticatedApp = React.lazy(() => import('./UnAuthenticatedApp'))
 
 const App = () => {
   const { user } = useUserContext()
-  console.log(user)
+  console.log('from app component: ', user)
   return (
     <div className="min-h-screen min-w-screen bg-twitterBlue text-white">
       <Suspense fallback={<Loading />}>

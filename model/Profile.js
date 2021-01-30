@@ -22,7 +22,7 @@ function decrTweet(id) {
     return client.hincrby('user:' + id, 'tweetCount', -1);
 }
 
-// handle follow / unfollow
+// handle follow / unfollow: note returns [false, false, false, false]
 function follow(followerID, followeeID) {
     let currentTime = Date.now();
     return Promise.all([
@@ -43,7 +43,7 @@ function unfollow(followerID, followeeID) {
 }
 
 // Getter
-async function getProfileJSON(id) {
+function getProfileJSON(id) {
     return new Promise((resolve, reject) => {
         client.hgetall('user:' + id, (err, value) => {
             if (err) {
@@ -55,4 +55,16 @@ async function getProfileJSON(id) {
     })
 }
 
-module.exports = { createProfile, incrTweet, decrTweet, follow, unfollow, getProfileJSON };
+function checkFollowing(followerID, followeeID) {
+    return new Promise((resolve, reject) => {
+        client.zscore('user:' + followerID + ':following', followeeID.toString(), (err, value) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(value);
+            }
+        })
+    })
+}
+
+module.exports = { createProfile, incrTweet, decrTweet, follow, unfollow, getProfileJSON, checkFollowing };

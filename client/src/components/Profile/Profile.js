@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useHistory, useParams, useLocation, Link } from 'react-router-dom'
 import { useUserContext } from '../../utils/UserContext'
 
@@ -48,6 +48,10 @@ const Profile = ({ Component, Type }) => {
                 setError(true)
             } else {
                 setProfile(data)
+                // activate follow btn if the user is following the profile: either redis zscore or null
+                if (data.requesterIsFollowing) {
+                    setFollowing(true)
+                }
             }
         }
         fetchData()
@@ -58,20 +62,37 @@ const Profile = ({ Component, Type }) => {
     const cssNav = (currentNav) => {
         return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
     }
-    function handleTweetsNav(e) {
-        e.preventDefault()
+    function handleTweetsNav() {
         setActiveNav("Tweets")
         history.replace(`/${username}`)
     }
-    function handleLikesNav(e) {
-        e.preventDefault()
+    function handleLikesNav() {
         setActiveNav("Likes")
         history.replace(`/${username}/likes`)
     }
 
-    // follow/following/unfollow
+    // toggle follow/following/unfollow
     const [following, setFollowing] = useState(false)
-    const modal = useRef(null)
+    const [modal, setModal] = useState(false)
+    const handleFollowBtn = () => {
+        if (following) {
+            return setModal(true)
+        } else {
+            followUser()
+                .then(() => setFollowing(true))
+        }
+    }
+
+    async function followUser() {
+        const response = await fetch(`/api/profile/${username}/follow`, {
+            method: 'POST',
+            body: JSON.stringify({ followeeID: profile.id }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        return response.json()
+    }
 
     return (
         error ? (
@@ -107,12 +128,7 @@ const Profile = ({ Component, Type }) => {
                                     Edit Profile
                                 </button>
                             ) : (
-                                    <div onClick={() => {
-                                        if (following) {
-                                            modal.current.open()
-                                        }
-                                        setFollowing(!following)
-                                    }}>
+                                    <div onClick={handleFollowBtn}>
                                         <FollowButton follow={following} />
                                     </div>
 
@@ -178,7 +194,8 @@ const Profile = ({ Component, Type }) => {
                     </div>
                     {/* render inherited component: tweets or likes */}
                     <Component />
-                    <UnfollowModal ref={modal} username={username} />
+                    {modal && <UnfollowModal setModal={setModal} username={username} setFollowing={setFollowing} />}
+                    {/* <UnfollowModal ref={modal} username={username} /> */}
                 </Fragment>
             )
     )

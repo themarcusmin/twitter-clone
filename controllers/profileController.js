@@ -1,8 +1,9 @@
 const User = require("../model/User");
-const { getProfileJSON } = require('../model/Profile')
+const { getProfileJSON, checkFollowing, follow } = require('../model/Profile')
 
 // based on username, send json of profile data and tweets
 module.exports.profile_get = async (req, res) => {
+    const requesterID = req.session.userID;
     // retrieve userID by filtering params.username
     const user = await User.findOne({ username: req.params.username });
     // username does not exist
@@ -12,7 +13,15 @@ module.exports.profile_get = async (req, res) => {
         const { _id } = user;
         // get json from redis
         const profileJSON = await getProfileJSON(_id);
-        res.status(200).json(profileJSON);
+        // 2 types of response: own profile || other profile
+        if (requesterID === _id) {
+            res.status(200).json(profileJSON);
+        }
+        // add following status for viewing other profile
+        else {
+            const requesterIsFollowing = await checkFollowing(requesterID, _id);
+            res.status(200).json({ ...profileJSON, requesterIsFollowing });
+        }
     }
 }
 
@@ -29,7 +38,14 @@ module.exports.fullname_get = async (req, res) => {
 }
 
 module.exports.post_follow_someone = async (req, res) => {
-
+    const username = req.params.username;
+    const requesterID = req.session.userID;
+    const { followeeID } = req.body;
+    console.log('followeeID is: ', followeeID);
+    console.log('requesterID is: ', requesterID);
+    // execute follow function
+    follow(requesterID, followeeID)
+        .then(() => res.status(200).json({ success: `Following ${username}` }))
 }
 
 module.exports.post_unfollow_someone = async (req, res) => {

@@ -21,7 +21,6 @@ const AuthenticatedApp = () => {
     return (
         <SocketProvider>
             <Router>
-
                 <div className="h-screen flex flex-row">
                     <Navbar />
                     <div className="overflow-y-auto scrollbar w-screen md:w-2/4 sm:w-3/6 border-white">
@@ -57,7 +56,6 @@ const AuthenticatedApp = () => {
                     </div>
                     <RightPanel />
                 </div>
-
             </Router>
         </SocketProvider>
     )
