@@ -21,6 +21,12 @@
     .inactive-text {
         @apply group-hover:text-blue-500 font-semibold text-lg
     }
+    .profile-followBtn-small {
+        @apply w-24 text-center absolute m-3 right-0 top-1 px-3 rounded-full border border-twitterBtn text-twitterBtn hover:bg-blue-400 hover:bg-opacity-10 font-bold text-sm py-1 focus:outline-none
+    }
+    .profile-followingBtn-small {
+        @apply w-24 text-center absolute m-3 right-0 top-1 px-3 rounded-full bg-twitterBtn text-white hover:bg-red-500 font-bold text-sm py-1 focus:outline-none
+    }
     .profile-follow {
         @apply w-24 text-center absolute m-3 right-0 top-0 px-3 rounded-full border border-twitterBtn text-twitterBtn hover:bg-blue-400 hover:bg-opacity-10 font-bold text-sm py-2 focus:outline-none
     }

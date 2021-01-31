@@ -1,29 +1,62 @@
-const { follow } = require('./Profile');
+const { checkFollowing, getFollowing, getFollowers, getFollowersDetails, getProfileJSON } = require('./Profile');
 
-// let user11 = new Profile(457, 'mrblack', 'ironman')
-// Promise.all([user11.follow(456), user11.incrTweet(), user11.incrTweet(), user11.decrTweet(), user11.incrTweet()]).then(val => console.log(val));
-// user11.getJSON()
-// console.log(createProfile(200, 'white', 'fang'));
-// let jj = getProfileJSON(200)
-// jj.then(res => console.log(res))
+// getFollowersJSON("6010f7c30656b406cca701b0").then(res => console.log(res))
 
-// checkFollowing('60129bb3e17a63215420499e', '6010f7c30656b406cca701b0').then(res => console.log(res))
+// getFollowersDetails("60129bb3e17a63215420499e", "6010f7c30656b406cca701b0")
+//     .then((res) => console.log(res))
 
-// .then(res => console.log(res))
-// async function dd() {
-//     const data = await checkFollowing('123', '321')
-//     console.log(data)
+// ['60129bb3e17a63215420499e']
+// getFollowers("6010f7c30656b406cca701b0")
+//     .then(ids => ids.map(id => {
+//         getFollowersDetails("60129bb3e17a63215420499e", id)
+//             .then(eachJSON => return eachJSON)
+//     }))
+//     .then(res => console.log(res))
 
+async function ee() {
+    const allFollowingUser = await getFollowers("6010f7c30656b406cca701b0");
+    // const arr = allFollowingUser.map(async (userID) => {
+    //     getFollowersDetails("60129bb3e17a63215420499e", userID).then((res) => return res)
+    // })
+    return allFollowingUser
+}
+
+// ee().then(res => console.log(res))
+// ee().then(ids => {
+//     ids.map(id => getFollowersDetails("60129bb3e17a63215420499e", id))
+// }).then(console.log)
+
+// getProfileJSON("6010f7c30656b406cca701b0")
+//     .then(({ id, username, fullname }) => {
+//         checkFollowing("60129bb3e17a63215420499e", id)
+//             .then(followingStatus => { username, fullname, followingStatus })
+//     })
+// .then(console.log)
+// console.log(username)
+
+// checkFollowing("60129bb3e17a63215420499e", "6010f7c30656b406cca701b0").then(console.log)
+
+// console.log(getFollowersDetails("60129bb3e17a63215420499e", "6010f7c30656b406cca701b0"))
+// function converter(id) {
+//     return { username: id + "junior" }
 // }
 
-// dd()
+// let arr = []
+// getFollowing("60129bb3e17a63215420499e")
+//     .then(ids => {
+//         return ids.forEach(id => {
+//             return getFollowersDetails("60129bb3e17a63215420499e", id).then(xx => arr.push(xx))
+//         })
+// })
 
+// setInterval(() => {
+//     console.log(arr)
+// }, 1000);
 // async function ee() {
-//     const data = await follow(123, 321)
-//     return data
+//     const data = await getFollowers("6010f7c30656b406cca701b0");
+//     return Promise.all(data.map(d => getFollowersDetails('60129bb3e17a63215420499e', d)))
+//     // const json = await getFollowersDetails('60129bb3e17a63215420499e', '60129bb3e17a63215420499e')
+//     // return json
 // }
-follow(123, 321).then(res => console.log("Success")).catch(err => console.log("Error: ", err));
-// console.log(follow(123, 321))
-// // console.log(ee())
-// console.log(ee())
-// follow(123, 321).then(res => console.log(res)).catch(err => console.log("err: ", err))
+
+// ee().then(console.log)

@@ -67,4 +67,37 @@ function checkFollowing(followerID, followeeID) {
     })
 }
 
-module.exports = { createProfile, incrTweet, decrTweet, follow, unfollow, getProfileJSON, checkFollowing };
+// fetch data on each followers
+async function getGeneralDetails(requesterID, id) {
+    const { fullname, username } = await getProfileJSON(id)
+    // follower is the requester
+    if (requesterID === id) {
+        return { username, fullname, isRequester: true }
+    }
+    const followingStatus = await checkFollowing(requesterID, id)
+    if (followingStatus) {
+        return { username, fullname, followingStatus: true }
+    }
+    return { username, fullname, followingStatus: false }
+}
+
+// return an array of follwers' id
+function getFollowers(id) {
+    return new Promise((resolve, reject) => {
+        client.zrevrange('user:' + id + ':followers', 0, -1, (err, value) => {
+            if (err) reject(err);
+            else resolve(value);
+        })
+    })
+}
+
+function getFollowing(id) {
+    return new Promise((resolve, reject) => {
+        client.zrevrange('user:' + id + ':following', 0, -1, (err, value) => {
+            if (err) reject(err);
+            else resolve(value);
+        })
+    })
+}
+
+module.exports = { createProfile, incrTweet, decrTweet, follow, unfollow, getProfileJSON, checkFollowing, getGeneralDetails, getFollowers, getFollowing };
