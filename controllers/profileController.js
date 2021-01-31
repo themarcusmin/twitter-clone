@@ -1,5 +1,5 @@
 const User = require("../model/User");
-const { getProfileJSON, checkFollowing, follow } = require('../model/Profile')
+const { getProfileJSON, checkFollowing, follow, unfollow } = require('../model/Profile')
 
 // based on username, send json of profile data and tweets
 module.exports.profile_get = async (req, res) => {
@@ -43,11 +43,16 @@ module.exports.post_follow_someone = async (req, res) => {
     const { followeeID } = req.body;
     console.log('followeeID is: ', followeeID);
     console.log('requesterID is: ', requesterID);
-    // execute follow function
+    // execute follow function & send json
     follow(requesterID, followeeID)
         .then(() => res.status(200).json({ success: `Following ${username}` }))
 }
 
 module.exports.post_unfollow_someone = async (req, res) => {
-
+    const username = req.params.username;
+    const requesterID = req.session.userID;
+    const { followeeID } = req.body;
+    // execute unfollow function & send json
+    unfollow(requesterID, followeeID)
+        .then(() => res.status(200).json({ success: `Unfollowing ${username}` }))
 }

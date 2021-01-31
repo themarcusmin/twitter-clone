@@ -17,6 +17,7 @@ import userLogo from '../../styles/user.svg'
  * 2 - render loading components if fetching
  * 3 - render error page if fetching fails
  * 4 - render profile page if fetching is successful
+ * 5 - CSR of follower / following count (setProfile)
  */
 
 function UnixTimeToMonthYear(t) {
@@ -33,6 +34,64 @@ const Profile = ({ Component, Type }) => {
     const [error, setError] = useState(false)
     // if username exists
     const [profile, setProfile] = useState(null)
+
+    // toggle profile navbar between tweets and likes
+    const [activeNav, setActiveNav] = useState(Type)
+    const cssNav = (currentNav) => {
+        return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
+    }
+    function handleTweetsNav() {
+        setActiveNav("Tweets")
+        history.replace(`/${username}`)
+    }
+    function handleLikesNav() {
+        setActiveNav("Likes")
+        history.replace(`/${username}/likes`)
+    }
+
+    // toggle follow/following/unfollow
+    const [following, setFollowing] = useState(false)
+    const [modal, setModal] = useState(false)
+    // user attempts to follow or unfollow
+    const handleFollowBtn = () => {
+        if (following) {
+            // options in modal: unfollow or cancel
+            return setModal(true)
+        } else {
+            followUser()
+                .then(() => setFollowing(true))
+                .then(() => setProfile({ ...profile, followers: + profile.followers + 1 }))
+        }
+    }
+
+    async function followUser() {
+        const response = await fetch(`/api/profile/${username}/follow`, {
+            method: 'POST',
+            body: JSON.stringify({ followeeID: profile.id }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        return response.json()
+    }
+
+    const handleUnfollowBtn = () => {
+        unfollowUser()
+            .then(() => setFollowing(false))
+            .then(() => setModal(false))
+            .then(() => setProfile({ ...profile, followers: + profile.followers - 1 }))
+    }
+
+    async function unfollowUser() {
+        const response = await fetch(`/api/profile/${username}/unfollow`, {
+            method: 'POST',
+            body: JSON.stringify({ followeeID: profile.id }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        return response.json()
+    }
 
     useEffect(() => {
         console.log("times")
@@ -56,43 +115,6 @@ const Profile = ({ Component, Type }) => {
         }
         fetchData()
     }, [username])
-
-    // toggle profile navbar between tweets and likes
-    const [activeNav, setActiveNav] = useState(Type)
-    const cssNav = (currentNav) => {
-        return activeNav === currentNav ? "active-profile-nav" : "inactive-profile-nav"
-    }
-    function handleTweetsNav() {
-        setActiveNav("Tweets")
-        history.replace(`/${username}`)
-    }
-    function handleLikesNav() {
-        setActiveNav("Likes")
-        history.replace(`/${username}/likes`)
-    }
-
-    // toggle follow/following/unfollow
-    const [following, setFollowing] = useState(false)
-    const [modal, setModal] = useState(false)
-    const handleFollowBtn = () => {
-        if (following) {
-            return setModal(true)
-        } else {
-            followUser()
-                .then(() => setFollowing(true))
-        }
-    }
-
-    async function followUser() {
-        const response = await fetch(`/api/profile/${username}/follow`, {
-            method: 'POST',
-            body: JSON.stringify({ followeeID: profile.id }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        return response.json()
-    }
 
     return (
         error ? (
@@ -194,8 +216,7 @@ const Profile = ({ Component, Type }) => {
                     </div>
                     {/* render inherited component: tweets or likes */}
                     <Component />
-                    {modal && <UnfollowModal setModal={setModal} username={username} setFollowing={setFollowing} />}
-                    {/* <UnfollowModal ref={modal} username={username} /> */}
+                    {modal && <UnfollowModal handleUnfollowBtn={handleUnfollowBtn} setModal={setModal} username={username} />}
                 </Fragment>
             )
     )

@@ -42,7 +42,7 @@ function unfollow(followerID, followeeID) {
     ])
 }
 
-// Getter
+// getters
 function getProfileJSON(id) {
     return new Promise((resolve, reject) => {
         client.hgetall('user:' + id, (err, value) => {

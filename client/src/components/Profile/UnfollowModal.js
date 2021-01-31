@@ -1,22 +1,26 @@
 import React, { useCallback, useEffect } from 'react'
 
-const Modal = ({ setModal, username, setFollowing }) => {
+const Modal = ({ setModal, username, handleUnfollowBtn }) => {
     console.log('loaded modal')
 
-    const handleEscape = useCallback(
-        event => {
-            if (event.keyCode === 27) return setModal(false)
-        }, []
-    )
+    const handleEscape = useCallback(event => {
+        if (event.keyCode === 27) return setModal(false)
+    }, [])
 
     const handleClickOutside = () => {
         setModal(false)
     }
 
-    const unfollowPerson = () => {
-        setFollowing(false)
-        setModal(false)
-    }
+    // async function unfollowUser() {
+    //     const response = await fetch(`/api/profile/${username}/follow`, {
+    //         method: 'POST',
+    //         body: JSON.stringify({ followeeID: profile.id }),
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     })
+    //     return response.json()
+    // }
 
     useEffect(() => {
         document.addEventListener('keydown', handleEscape, false)
@@ -49,7 +53,7 @@ const Modal = ({ setModal, username, setFollowing }) => {
                         </div>
                     </div>
                     <div className="px-4 pb-5 md:justify-center sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button onClick={unfollowPerson} type="button" className="w-full inline-flex justify-center rounded-full shadow-sm px-4 py-2 bg-twitterBtn text-base font-medium text-white hover:bg-twitterBtnHover focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        <button onClick={handleUnfollowBtn} type="button" className="w-full inline-flex justify-center rounded-full shadow-sm px-4 py-2 bg-twitterBtn text-base font-medium text-white hover:bg-twitterBtnHover focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
                             Unfollow
                         </button>
                         <button onClick={() => setModal(false)} type="button" className="mt-3 w-full inline-flex justify-center rounded-full shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
