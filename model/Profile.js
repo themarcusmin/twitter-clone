@@ -67,18 +67,39 @@ function checkFollowing(followerID, followeeID) {
     })
 }
 
-// fetch data on each followers
+// for listing "Follows you" status under following/followers page
+function checkFollowsBack(requesterID, profileID) {
+    return new Promise((resolve, reject) => {
+        client.zscore('user:' + requesterID + ':followers', profileID.toString(), (err, value) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(value);
+            }
+        })
+    })
+}
+
+/**
+ * function: fetch data on each following/followers profile (3 variables to consider)
+ * 1 - fetched profile is yourself / requester
+ * 2 - fetched profile follows you
+ * 3 - fetched profile is the one you are also following
+ */
 async function getGeneralDetails(requesterID, id) {
     const { fullname, username } = await getProfileJSON(id)
     // follower is the requester
     if (requesterID === id) {
         return { username, fullname, isRequester: true }
     }
-    const followingStatus = await checkFollowing(requesterID, id)
+    // specify if requester user is following the id
+    const followingStatus = await checkFollowing(requesterID, id);
+    // check if user follows you back
+    const followsBack = await checkFollowsBack(requesterID, id);
     if (followingStatus) {
-        return { username, fullname, followingStatus: true }
+        return { username, fullname, followsBack, followingStatus: true }
     }
-    return { username, fullname, followingStatus: false }
+    return { username, fullname, followsBack, followingStatus: false }
 }
 
 // return an array of follwers' id
@@ -100,4 +121,4 @@ function getFollowing(id) {
     })
 }
 
-module.exports = { createProfile, incrTweet, decrTweet, follow, unfollow, getProfileJSON, checkFollowing, getGeneralDetails, getFollowers, getFollowing };
+module.exports = { createProfile, incrTweet, decrTweet, follow, unfollow, getProfileJSON, checkFollowing, getGeneralDetails, getFollowers, getFollowing, checkFollowsBack };

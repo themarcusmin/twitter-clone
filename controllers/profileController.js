@@ -13,7 +13,7 @@ module.exports.profile_get = async (req, res) => {
         const { _id } = user;
         // get json from redis
         const profileJSON = await getProfileJSON(_id);
-        // 2 types of response: own profile || other profile
+        // 2 types of view for loggedin user: own profile || other profile
         if (requesterID === _id) {
             res.status(200).json(profileJSON);
         }

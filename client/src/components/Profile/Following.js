@@ -26,7 +26,7 @@ const Following = () => {
         <Fragment>
             <div className="h-full default-tweet-border">
                 {users && users.map(user =>
-                    <ProfileTag user={user} />
+                    <ProfileTag key={user.username} user={user} />
                 )}
                 {users && (users.length === 0) &&
                     <div className="flex justify-center text-lg font-bold pt-6">
