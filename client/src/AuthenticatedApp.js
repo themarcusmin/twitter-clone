@@ -17,6 +17,8 @@ import Following from './components/Profile/Following'
 import ProfileTweet from './components/Profile/ProfileTweet'
 import ProfileLike from './components/Profile/ProfileLike'
 
+import { ProfileProvider } from './utils/ProfileContext'
+
 const AuthenticatedApp = () => {
     return (
         <SocketProvider>

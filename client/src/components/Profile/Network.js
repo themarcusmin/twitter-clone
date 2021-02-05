@@ -10,6 +10,7 @@ import backArrow from './svg/backArrow.svg'
  */
 
 const Network = ({ Component, Type }) => {
+    console.log("network rendered")
     const history = useHistory()
     const { username } = useParams()
     // toggle navbar between followers and following
